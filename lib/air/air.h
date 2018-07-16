@@ -1,6 +1,7 @@
 #ifndef __AIR_H__
 #define __AIR_H__
 
+#include <RF24/src/RF24.h>
 #include "airproto.h"
 
 class Air {

@@ -10,7 +10,7 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $@
 
 air.o: lib/air/air.h lib/air/airproto.h lib/air/air.cpp
-	$(CC) -c lib/air/air.cpp -o $@
+	$(CC) -c lib/air/air.cpp -o $@ -DGPIO_SUN7I
 
 main.o: src/linux/main.cpp
 	$(CC) -c src/linux/main.cpp -o $@
