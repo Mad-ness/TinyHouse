@@ -3,5 +3,10 @@
 
 #include "../air/airproto.h"
 
+class Splitter {
+
+
+};
+
 #endif // __SENDER_H__
 

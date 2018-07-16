@@ -1,3 +1,9 @@
 [submodule "lib/RF24"]
 	path = lib/RF24
 	url = https://github.com/Mad-ness/librf24-sunxi.git
+[submodule "lib/lev"]
+	path = lib/lev
+	url = https://github.com/YasserAsmi/lev.git
+[submodule "lib/surlparser"]
+	path = lib/surlparser
+	url = https://github.com/Mad-ness/simple-url-parser.git
