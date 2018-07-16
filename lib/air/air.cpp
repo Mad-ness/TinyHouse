@@ -19,8 +19,21 @@ Air::Air(const char *device, const char *read_addr, const char *write_addr, cons
 #endif // __LINUX__
 }
 
-void Air::init() {
-    
+void Air::setup() {
+    m_rf24.begin();
+    m_rf24.setPALevel(RF24_PA_LOW);
+    m_rf24.setDataRate(RF24_250KBPS);
+#if defined(ARDUINO)
+    this->m_rf24.openReadingPipe(1, this->m_pipes.read);
+    this->m_rf24.openWritingPipe(this->m_pipes.write);
+#elif defined(__LINUX__)
+    uint64_t pipes[2];
+    memcpy(&pipes[0], this->m_pipes.read, sizeof(this->m_pipes.read));
+    memcpy(&pipes[1], this->m_pipes.write, sizeof(this->m_pipes.write));
+    this->m_rf24.openReadingPipe(1, pipes[0]);
+    this->m_rf24.openWritingPipe(pipes[1]);
+#endif
+    this->m_rf24.startListening(); 
 }
 
 void
@@ -29,20 +42,30 @@ Air::onReceivedPacket() {
 }
 
 bool
-Air::sendRequest(const air_int8_t packet_id, const air_int8_t object_id, const air_byte_t command, const air_byte_t data, const int8_t length, const void *payload) {
+Air::sendRequest(const air_int8_t packet_id, const air_int8_t object_id, const air_byte_t command, const air_byte_t value, const int8_t length, const void *payload) {
     AirPacket pkt;
     pkt.pid = packet_id;
     pkt.oid = object_id;
     pkt.cmd = command;
-    pkt.data = data;
+    pkt.value = value;
     pkt.len = length;
     memcpy(&pkt.payload, payload, length);
     return this->sendRequest(pkt);
 }
 
 bool
-Air::sendRequest(const AirPacket &pkt) {
-    return true; 
+Air::sendRequest(AirPacket &pkt) {
+	m_rf24.stopListening();
+	bool result = false;
+	int attempts = 0;
+	while ( attempts++ < 5 ) {
+		if ( m_rf24.write(&pkt, pkt.size()) ) {
+			result = true;
+			break;
+		}
+	}
+	m_rf24.startListening();
+    return result;
 }
 
 

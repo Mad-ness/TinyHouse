@@ -16,7 +16,7 @@ class Air {
 #endif // __LINUX__
         AirPacket m_packet;
         void onReceivedPacket();
-        void init();
+        void setup();
     public:
 #ifdef ARDUINO_ARCH_AVR
         Air(const air_byte_t *read_addr, const air_byte_t *write_addr, const int ce_pin, const int csn_pin);
@@ -24,7 +24,7 @@ class Air {
         Air(const char *device, const char *read_addr, const char *write_addr, const int ce_pin, const int csn_pin);
 #endif // __LINUX__
         AirPacket &packet() { return this->m_packet; };
-        bool sendRequest(const AirPacket &pkt);
+        bool sendRequest(AirPacket &pkt);
         bool sendRequest(const air_int8_t packet_id, const air_int8_t object_id, const air_byte_t command, const air_byte_t data, const int8_t len, const void *payload);
 };
 
