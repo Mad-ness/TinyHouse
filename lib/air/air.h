@@ -1,7 +1,11 @@
 #ifndef __AIR_H__
 #define __AIR_H__
 
-#include <RF24/src/RF24.h>
+#ifdef ARDUINO_ARCH_AVR
+    #include <RF24.h>
+#elif __LINUX__
+    #include <RF24/src/RF24.h>
+#endif // Platform selection
 #include "airproto.h"
 
 class Air {
