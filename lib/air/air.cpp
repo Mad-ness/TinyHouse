@@ -6,8 +6,10 @@
 
 #ifdef ARDUINO_ARCH_AVR
 Air::Air(const air_byte_t *read_addr, const air_byte_t *write_addr, const int ce_pin, const int csn_pin) 
+    : m_rf24(ce_pin, csn_pin)
 #elif __LINUX__
 Air::Air(const char *device, const char *read_addr, const char *write_addr, const int ce_pin, const int csn_pin) 
+    : m_rf24(ce_pin, csn_pin, device)
 #endif // __LINUX__ || ARDUINO_ARCH_AVR
 {
     memcpy( m_pipes.read, read_addr, 6 );
